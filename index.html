@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Guides - Tutorial Library</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+</head>
+<body>
+    <!-- Search Section (Prominent) -->
+    <div class="search-container">
+        <div class="search-wrapper">
+            <h1>School Guides</h1>
+            <p class="subtitle">Search through our tutorial library</p>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search for guides, topics, or keywords..." autocomplete="off">
+                <button id="searchBtn">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM18 18l-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+            <div id="searchResults" class="search-results"></div>
+        </div>
+    </div>
+
+    <!-- PDF Viewer Modal -->
+    <div id="pdfModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="pdfTitle"></h2>
+                <button id="closeModal" class="close-btn">&times;</button>
+            </div>
+            <div class="pdf-controls">
+                <button id="prevPage">Previous</button>
+                <span id="pageInfo">Page <span id="currentPage">1</span> of <span id="totalPages">1</span></span>
+                <button id="nextPage">Next</button>
+                <button id="zoomOut">-</button>
+                <span id="zoomLevel">100%</span>
+                <button id="zoomIn">+</button>
+            </div>
+            <div class="pdf-viewer-container">
+                <canvas id="pdfCanvas"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Guides Grid (Bottom Section) -->
+    <div class="guides-container">
+        <h2>Available Guides</h2>
+        <div id="guidesGrid" class="guides-grid">
+            <!-- Guides will be dynamically loaded here -->
+        </div>
+    </div>
+
+    <script>
+        // Set PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    </script>
+    <script src="app.js"></script>
+</body>
+</html>
