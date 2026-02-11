@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>School Guides - Tutorial Library</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" integrity="sha512-0/qg8a6X2xR2GdD9YPFCQEq5kQ1FQ0Gw0CjVSJCZ2wHhPqFVVZL/yCPmUu8dCXLJpTqYKVuGzT5kQJgQNmVSQQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
     <!-- Search Section (Prominent) -->
@@ -55,7 +55,7 @@
     </div>
 
     <script>
-        // Set PDF.js worker
+        // Set PDF.js worker with integrity check
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
     </script>
     <script src="app.js"></script>
