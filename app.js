@@ -90,6 +90,8 @@ async function buildSearchIndex() {
             }
         } catch (error) {
             console.warn(`Could not index ${guide.title}:`, error.message);
+            // Mark guide as not searchable in content (title/description still searchable)
+            guide.searchDisabled = true;
         }
     }
 }
@@ -226,7 +228,7 @@ async function openPdf(guide, startPage = 1) {
         await renderPage(currentPage);
         updatePageInfo();
     } catch (error) {
-        alert(`Error loading PDF: ${error.message}\n\nMake sure the PDF file exists at ${guide.file}`);
+        showNotification(`Unable to load "${guide.title}". Please try again or contact support if the issue persists.`, 'error');
         closePdfModal();
     }
 }
@@ -317,4 +319,21 @@ function debounce(func, wait) {
         clearTimeout(timeout);
         timeout = setTimeout(later, wait);
     };
+}
+
+// Show notification toast
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    // Trigger animation
+    setTimeout(() => notification.classList.add('show'), 10);
+    
+    // Remove after 5 seconds
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 300);
+    }, 5000);
 }
