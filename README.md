@@ -2,6 +2,21 @@
 
 A modern web application for hosting and viewing PDF tutorials with search functionality and smooth page transitions.
 
+## 📍 Quick Start: Where to Put PDFs
+
+**All PDF files go in the `pdfs/` directory** located at the root of this repository:
+```
+school_guides/
+├── pdfs/              ← PUT YOUR PDF FILES HERE
+│   ├── README.md      (Documentation)
+│   └── sample-guide.pdf
+├── index.html
+├── app.js
+└── styles.css
+```
+
+See the [pdfs/README.md](pdfs/README.md) for detailed instructions on adding PDFs.
+
 ## Features
 
 - 📚 **Interactive PDF Viewer** - View PDFs like webpages directly in the browser
@@ -22,15 +37,29 @@ A modern web application for hosting and viewing PDF tutorials with search funct
 
 ## Adding New PDFs
 
+> 📂 **PDFs Location:** All PDF files must be placed in the `pdfs/` directory at the repository root.  
+> See [pdfs/README.md](pdfs/README.md) for detailed documentation.
+
 ### Step 1: Add Your PDF File
 
-Place your PDF file in the `pdfs/` directory:
+Place your PDF file in the `pdfs/` directory (located at the root of this repository):
 ```
 pdfs/
 ├── sample-guide.pdf
 ├── your-new-guide.pdf
 └── another-guide.pdf
 ```
+
+**Using command line:**
+```bash
+# From the repository root
+cp /path/to/your-file.pdf pdfs/your-file.pdf
+```
+
+**Using GitHub web interface:**
+1. Navigate to the `pdfs/` folder in GitHub
+2. Click "Add file" → "Upload files"
+3. Upload your PDF files
 
 ### Step 2: Register the PDF
 
