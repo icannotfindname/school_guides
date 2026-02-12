@@ -6,6 +6,14 @@ const guides = [
         description: 'An example guide to demonstrate the PDF viewer',
         file: 'pdfs/sample-guide.pdf',
         icon: '📚'
+    },
+    // Additional guides
+    {
+        id: 'admissions-guide-1',
+        title: 'Admissions Guide 1',
+        description: 'Admissions information and procedures',
+        file: 'pdfs/Admissions Guide 1.pdf',
+        icon: '📄'
     }
     // Add more guides here as needed
     // Example:
@@ -73,8 +81,8 @@ async function buildSearchIndex() {
     searchIndex = [];
     
     for (const guide of guides) {
-        try {
-            const loadingTask = pdfjsLib.getDocument(guide.file);
+            try {
+            const loadingTask = pdfjsLib.getDocument({ url: encodeURI(guide.file), disableRange: true });
             const pdf = await loadingTask.promise;
             
             for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
@@ -220,7 +228,7 @@ async function openPdf(guide, startPage = 1) {
     modal.classList.add('active');
     
     try {
-        const loadingTask = pdfjsLib.getDocument(guide.file);
+        const loadingTask = pdfjsLib.getDocument({ url: encodeURI(guide.file), disableRange: true });
         currentPdf = await loadingTask.promise;
         totalPages = currentPdf.numPages;
         currentPage = startPage;

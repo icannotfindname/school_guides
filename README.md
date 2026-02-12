@@ -1,4 +1,4 @@
-# School Guides - Interactive PDF Tutorial Library
+# Foley's Guides - Interactive PDF Tutorial Library
 
 A modern web application for hosting and viewing PDF tutorials with search functionality and smooth page transitions.
 
