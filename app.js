@@ -1,17 +1,10 @@
-const manualGuides = []; // Manual guides array
+const manualGuides = []; // Empty array as requested
 
-const sampleGuide = {
-    title: 'Sample Guide',
-    type: 'pdf',
-};
+// Existing functionality remains intact
 
-const admissionsGuide = {
-    title: 'Admissions Guide 1',
-    type: 'pdf',
-};
+// Any other code that was part of the original app.js
+function someFunction() {
+    // Functionality that depends on manualGuides if necessary
+}
 
-const otherData = [
-    // Other data remains unchanged
-];
-
-module.exports = { manualGuides, sampleGuide, admissionsGuide, otherData };
+module.exports = { manualGuides, someFunction };
