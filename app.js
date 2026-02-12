@@ -1,5 +1,6 @@
-// Configuration - List of available PDF guides
-const guides = [
+// Configuration - List of manually defined PDF guides
+// These take precedence over auto-detected PDFs
+const manualGuides = [
     {
         id: 'sample-guide',
         title: 'Sample Tutorial Guide',
@@ -19,6 +20,7 @@ const guides = [
 ];
 
 // Global variables
+let guides = []; // Will be populated with manual + auto-detected guides
 let currentPdf = null;
 let currentPage = 1;
 let totalPages = 0;
@@ -26,12 +28,48 @@ let pdfScale = 1.5;
 let searchIndex = [];
 
 // Initialize the application
-document.addEventListener('DOMContentLoaded', function() {
-    loadGuides();
-    initializeSearch();
-    initializePdfViewer();
-    buildSearchIndex();
+document.addEventListener('DOMContentLoaded', async function() {
+    try {
+        await loadPdfManifest();
+        loadGuides();
+        initializeSearch();
+        initializePdfViewer();
+        buildSearchIndex();
+    } catch (error) {
+        console.error('Error initializing application:', error);
+        showNotification('Failed to initialize the application. Please refresh the page.', 'error');
+    }
 });
+
+// Load PDF manifest and merge with manual guides
+async function loadPdfManifest() {
+    try {
+        const response = await fetch('pdf-manifest.json');
+        if (response.ok) {
+            const manifest = await response.json();
+            const autoDetectedGuides = manifest.guides || [];
+            
+            // Create a map of manual guides by ID for quick lookup
+            const manualGuideIds = new Set(manualGuides.map(g => g.id));
+            
+            // Filter out auto-detected guides that have manual definitions
+            const uniqueAutoGuides = autoDetectedGuides.filter(g => !manualGuideIds.has(g.id));
+            
+            // Merge: manual guides first (they take precedence), then auto-detected
+            guides = [...manualGuides, ...uniqueAutoGuides];
+            
+            console.log(`Loaded ${guides.length} guides (${manualGuides.length} manual, ${uniqueAutoGuides.length} auto-detected)`);
+        } else {
+            // Manifest not found, use only manual guides
+            console.log('PDF manifest not found, using manual guides only');
+            guides = [...manualGuides];
+        }
+    } catch (error) {
+        // Error loading manifest, use only manual guides
+        console.warn('Could not load PDF manifest:', error.message);
+        guides = [...manualGuides];
+    }
+}
 
 // Load guide cards into the grid
 function loadGuides() {
