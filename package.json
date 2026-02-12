@@ -1,0 +1,17 @@
+{
+  "name": "school_guides",
+  "version": "1.0.0",
+  "description": "Interactive PDF Tutorial Library with automatic PDF detection",
+  "scripts": {
+    "generate-manifest": "node generate-pdf-list.js",
+    "serve": "python3 -m http.server 8080"
+  },
+  "keywords": [
+    "pdf",
+    "tutorial",
+    "guides",
+    "education"
+  ],
+  "author": "",
+  "license": "MIT"
+}
