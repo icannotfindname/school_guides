@@ -32,16 +32,18 @@ function createTitle(filename) {
 // Helper function to generate description
 function createDescription(filename) {
     const title = createTitle(filename);
-    return `Guide: ${title}`;
+    // Create a more natural description
+    return `PDF guide covering ${title.toLowerCase()}`;
 }
 
 // Helper function to select an icon based on filename
 function selectIcon(filename) {
     const lower = filename.toLowerCase();
     
+    // Check more specific patterns first
+    if (lower.includes('publish') || lower.includes('decision')) return '📊';
     if (lower.includes('parent') || lower.includes('child') || lower.includes('family')) return '👨‍👩‍👧‍👦';
     if (lower.includes('enrol') || lower.includes('admission') || lower.includes('application')) return '📝';
-    if (lower.includes('publish') || lower.includes('decision')) return '📋';
     if (lower.includes('math') || lower.includes('algebra') || lower.includes('calculus')) return '🔢';
     if (lower.includes('science') || lower.includes('physics') || lower.includes('chemistry')) return '🔬';
     if (lower.includes('code') || lower.includes('program') || lower.includes('computer')) return '💻';

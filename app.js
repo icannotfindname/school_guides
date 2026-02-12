@@ -29,11 +29,16 @@ let searchIndex = [];
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', async function() {
-    await loadPdfManifest();
-    loadGuides();
-    initializeSearch();
-    initializePdfViewer();
-    buildSearchIndex();
+    try {
+        await loadPdfManifest();
+        loadGuides();
+        initializeSearch();
+        initializePdfViewer();
+        buildSearchIndex();
+    } catch (error) {
+        console.error('Error initializing application:', error);
+        showNotification('Failed to initialize the application. Please refresh the page.', 'error');
+    }
 });
 
 // Load PDF manifest and merge with manual guides
