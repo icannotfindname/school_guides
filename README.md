@@ -40,6 +40,10 @@ See the [pdfs/README.md](pdfs/README.md) for detailed instructions on adding PDF
 > 📂 **PDFs Location:** All PDF files must be placed in the `pdfs/` directory at the repository root.  
 > See [pdfs/README.md](pdfs/README.md) for detailed documentation.
 
+### Automatic Detection (Recommended)
+
+**NEW:** PDFs are now automatically detected! Simply add your PDF and regenerate the manifest.
+
 ### Step 1: Add Your PDF File
 
 Place your PDF file in the `pdfs/` directory (located at the root of this repository):
@@ -61,36 +65,42 @@ cp /path/to/your-file.pdf pdfs/your-file.pdf
 2. Click "Add file" → "Upload files"
 3. Upload your PDF files
 
-### Step 2: Register the PDF
+### Step 2: Generate PDF Manifest
 
-Edit `app.js` and add a new entry to the `guides` array:
+Run the automatic detection script:
+
+```bash
+# From the repository root
+node generate-pdf-list.js
+```
+
+This will scan the `pdfs/` directory and create/update `pdf-manifest.json` with all detected PDFs.
+
+### Step 3: Commit to GitHub
+
+```bash
+git add pdfs/your-new-guide.pdf pdf-manifest.json
+git commit -m "Add new guide: Your Guide Title"
+git push
+```
+
+### Manual Configuration (Optional)
+
+For custom titles, descriptions, or icons, edit the `manualGuides` array in `app.js`:
 
 ```javascript
-const guides = [
-    {
-        id: 'sample-guide',
-        title: 'Sample Tutorial Guide',
-        description: 'An example guide to demonstrate the PDF viewer',
-        file: 'pdfs/sample-guide.pdf',
-        icon: '📚'
-    },
+const manualGuides = [
     {
         id: 'your-new-guide',
-        title: 'Your Guide Title',
-        description: 'Brief description of your guide',
+        title: 'Your Custom Title',
+        description: 'Custom description of your guide',
         file: 'pdfs/your-new-guide.pdf',
         icon: '📖'  // Choose any emoji
     }
 ];
 ```
 
-### Step 3: Commit to GitHub
-
-```bash
-git add pdfs/your-new-guide.pdf app.js
-git commit -m "Add new guide: Your Guide Title"
-git push
-```
+Manual entries take precedence over auto-detected PDFs, allowing you to customize specific guides while keeping automatic detection for others.
 
 ## Hosting on GitHub Pages
 

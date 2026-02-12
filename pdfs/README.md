@@ -12,6 +12,13 @@ This directory is located at:
 ## 📚 Current PDFs
 
 - `sample-guide.pdf` - Example tutorial demonstrating the PDF viewer
+- `How Parents _can create account and_ apply Child.pdf` - Guide for parents
+- `Publishing Decisions_ and_ Opening Enrolment Single.pdf` - Single enrolment guide
+- `Publishing Decisions_ and_ Opening Enrolment_ Batch.pdf` - Batch enrolment guide
+
+## ✨ Automatic PDF Detection
+
+**NEW:** PDFs are now automatically detected! Simply add your PDF to this directory and regenerate the manifest.
 
 ## ➕ Adding New PDFs
 
@@ -23,25 +30,22 @@ To add a new PDF tutorial:
    cp /path/to/your-guide.pdf pdfs/your-guide.pdf
    ```
 
-2. **Register it in `app.js`:**
-   
-   Open `app.js` and add an entry to the `guides` array:
-   ```javascript
-   {
-       id: 'your-guide',
-       title: 'Your Guide Title',
-       description: 'Brief description',
-       file: 'pdfs/your-guide.pdf',
-       icon: '📖'
-   }
+2. **Generate the PDF manifest:**
+   ```bash
+   # From the repository root
+   node generate-pdf-list.js
    ```
 
 3. **Commit your changes:**
    ```bash
-   git add pdfs/your-guide.pdf app.js
+   git add pdfs/your-guide.pdf pdf-manifest.json
    git commit -m "Add new guide: Your Guide Title"
    git push
    ```
+
+### Optional: Manual Configuration
+
+For custom titles, descriptions, or icons, you can still manually add entries to the `manualGuides` array in `app.js`. Manual entries take precedence over auto-detected PDFs.
 
 ## 📝 File Naming Guidelines
 
