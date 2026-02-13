@@ -145,6 +145,42 @@ Works on all modern browsers:
 - `+/-` Keys - Zoom in/out
 - `ESC` - Close PDF viewer
 
+## Troubleshooting
+
+### Site Shows Old PDFs After Changes
+
+If you've updated PDFs in the `pdfs/` directory but the website still shows old content:
+
+**Solution:** Regenerate the PDF manifest:
+
+```bash
+# From the repository root
+node generate-pdf-list.js
+git add pdf-manifest.json
+git commit -m "Update PDF manifest"
+git push
+```
+
+**Why this happens:** The website uses `pdf-manifest.json` to know which PDFs exist. When you add, remove, or rename PDFs, this manifest file needs to be regenerated to reflect the changes.
+
+**When to regenerate:**
+- After adding new PDFs
+- After removing PDFs
+- After renaming PDFs
+- If the site shows "file not found" errors
+
+### Browser Caching Issues
+
+If you still see old content after regenerating the manifest:
+
+1. **Hard refresh** your browser:
+   - Windows/Linux: `Ctrl + Shift + R` or `Ctrl + F5`
+   - Mac: `Cmd + Shift + R`
+
+2. **Clear browser cache** for the site
+
+3. **Wait for GitHub Pages** to rebuild (usually 1-2 minutes)
+
 ## Customization
 
 ### Change Colors

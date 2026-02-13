@@ -11,10 +11,9 @@ This directory is located at:
 
 ## 📚 Current PDFs
 
-- `sample-guide.pdf` - Example tutorial demonstrating the PDF viewer
 - `How Parents _can create account and_ apply Child.pdf` - Guide for parents
 - `Publishing Decisions_ and_ Opening Enrolment Single.pdf` - Single enrolment guide
-- `Publishing Decisions_ and_ Opening Enrolment_ Batch.pdf` - Batch enrolment guide
+- `Publishing Decisions_ and_ Opening Enrolment_ Batch-1.pdf` - Batch enrolment guide
 
 ## ✨ Automatic PDF Detection
 
@@ -66,6 +65,44 @@ file: 'pdfs/your-filename.pdf'
 - Maximum recommended file size: 10MB per PDF
 - Ensure PDFs are not password-protected
 - PDFs will be indexed for search functionality when the app loads
+
+## 🔧 Troubleshooting
+
+### Site Shows Old PDFs After Making Changes
+
+**Problem:** You've added, removed, or renamed PDFs but the website still shows old content.
+
+**Solution:** Regenerate the PDF manifest:
+
+```bash
+# From the repository root (school_guides/)
+node generate-pdf-list.js
+git add pdf-manifest.json
+git commit -m "Update PDF manifest"
+git push
+```
+
+**Why:** The `pdf-manifest.json` file tracks all available PDFs. It must be regenerated whenever PDFs are added, removed, or renamed.
+
+### When to Regenerate the Manifest
+
+Always run `node generate-pdf-list.js` after:
+- ✅ Adding new PDFs to this directory
+- ✅ Removing PDFs from this directory
+- ✅ Renaming PDF files
+- ✅ Replacing existing PDFs with new versions
+
+### Quick Check
+
+To verify your PDFs match the manifest:
+
+```bash
+# From repository root
+node generate-pdf-list.js
+git status
+```
+
+If you see changes to `pdf-manifest.json`, commit and push those changes.
 
 ## 🌐 GitHub Storage
 
