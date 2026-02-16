@@ -17,7 +17,12 @@ This directory is located at:
 
 ## ✨ Automatic PDF Detection
 
-**NEW:** PDFs are now automatically detected! Simply add your PDF to this directory and regenerate the manifest.
+**NEW:** PDFs are now automatically discovered when you open the webapp! 🎉
+
+- **Local development:** Simply add PDFs to this directory and refresh the page
+- **GitHub Pages:** Commit your PDFs and they'll appear automatically on your site
+
+No need to run `node generate-pdf-list.js` for local development anymore!
 
 ## ➕ Adding New PDFs
 
@@ -29,14 +34,12 @@ To add a new PDF tutorial:
    cp /path/to/your-guide.pdf pdfs/your-guide.pdf
    ```
 
-2. **Generate the PDF manifest:**
+2. **For local development:** Just refresh the page - PDFs are auto-discovered!
+
+3. **For GitHub Pages (optional):** Regenerate the manifest and commit:
    ```bash
    # From the repository root
    node generate-pdf-list.js
-   ```
-
-3. **Commit your changes:**
-   ```bash
    git add pdfs/your-guide.pdf pdf-manifest.json
    git commit -m "Add new guide: Your Guide Title"
    git push
@@ -68,11 +71,16 @@ file: 'pdfs/your-filename.pdf'
 
 ## 🔧 Troubleshooting
 
-### Site Shows Old PDFs After Making Changes
+### PDFs Auto-Discovered! 🎉
 
-**Problem:** You've added, removed, or renamed PDFs but the website still shows old content.
+**Good news:** The webapp now automatically discovers PDFs when you open it!
 
-**Solution:** Regenerate the PDF manifest:
+- **Local development:** New PDFs appear immediately when you refresh
+- **GitHub Pages:** Commit your PDFs and they're available on your site
+
+### Optional: Manual Manifest Update (GitHub Pages)
+
+For static hosting like GitHub Pages, you can optionally regenerate the manifest:
 
 ```bash
 # From the repository root (school_guides/)
@@ -82,11 +90,11 @@ git commit -m "Update PDF manifest"
 git push
 ```
 
-**Why:** The `pdf-manifest.json` file tracks all available PDFs. It must be regenerated whenever PDFs are added, removed, or renamed.
+**Note:** This is optional for local development since PDFs are automatically discovered.
 
-### When to Regenerate the Manifest
+### When to Regenerate the Manifest (Optional)
 
-Always run `node generate-pdf-list.js` after:
+For GitHub Pages deployment, consider regenerating after:
 - ✅ Adding new PDFs to this directory
 - ✅ Removing PDFs from this directory
 - ✅ Renaming PDF files
@@ -94,15 +102,12 @@ Always run `node generate-pdf-list.js` after:
 
 ### Quick Check
 
-To verify your PDFs match the manifest:
+To verify your PDFs are detected:
 
 ```bash
 # From repository root
-node generate-pdf-list.js
-git status
+ls -lh pdfs/*.pdf
 ```
-
-If you see changes to `pdf-manifest.json`, commit and push those changes.
 
 ## 🌐 GitHub Storage
 
