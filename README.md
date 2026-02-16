@@ -40,9 +40,18 @@ See the [pdfs/README.md](pdfs/README.md) for detailed instructions on adding PDF
 > 📂 **PDFs Location:** All PDF files must be placed in the `pdfs/` directory at the repository root.  
 > See [pdfs/README.md](pdfs/README.md) for detailed documentation.
 
-### Automatic Detection (Recommended)
+### ⚡ Automatic Detection (New!)
 
-**NEW:** PDFs are now automatically detected! Simply add your PDF and regenerate the manifest.
+**PDFs are now automatically discovered when you open the webapp!** 
+
+The application will:
+1. 🔍 Automatically scan the `pdfs/` directory when the page loads
+2. 📝 Generate the PDF list on-the-fly
+3. 📊 Display all PDFs without needing to run any commands
+
+**For local development:** The webapp will dynamically discover PDFs from the directory when you open it.
+
+**For GitHub Pages:** You need to regenerate the static `pdf-manifest.json` file after adding PDFs (see steps below).
 
 ### Step 1: Add Your PDF File
 
@@ -65,20 +74,34 @@ cp /path/to/your-file.pdf pdfs/your-file.pdf
 2. Click "Add file" → "Upload files"
 3. Upload your PDF files
 
-### Step 2: Generate PDF Manifest
+### Step 2: Open the Webapp
 
-Run the automatic detection script:
+**Local development:**
+```bash
+# Start a local server
+npm run serve
+# or
+python3 -m http.server 8080
+```
+
+Then open http://localhost:8080 in your browser. Your new PDFs will be automatically discovered!
+
+**GitHub Pages:**
+After adding PDFs, regenerate the manifest and commit:
+```bash
+node generate-pdf-list.js
+git add pdfs/your-new-guide.pdf pdf-manifest.json
+git commit -m "Add new guide: Your Guide Title"
+git push
+```
+
+### Optional: Update Static Manifest (Required for GitHub Pages)
+
+To update the static manifest for deployment:
 
 ```bash
 # From the repository root
 node generate-pdf-list.js
-```
-
-This will scan the `pdfs/` directory and create/update `pdf-manifest.json` with all detected PDFs.
-
-### Step 3: Commit to GitHub
-
-```bash
 git add pdfs/your-new-guide.pdf pdf-manifest.json
 git commit -m "Add new guide: Your Guide Title"
 git push
@@ -147,11 +170,11 @@ Works on all modern browsers:
 
 ## Troubleshooting
 
-### Site Shows Old PDFs After Changes
+### Automatic PDF Discovery (Local Development)
 
-If you've updated PDFs in the `pdfs/` directory but the website still shows old content:
+**Local development:** New PDFs appear immediately when you refresh the page - no manual steps needed!
 
-**Solution:** Regenerate the PDF manifest:
+**GitHub Pages:** You must regenerate the manifest after adding PDFs:
 
 ```bash
 # From the repository root
@@ -161,13 +184,7 @@ git commit -m "Update PDF manifest"
 git push
 ```
 
-**Why this happens:** The website uses `pdf-manifest.json` to know which PDFs exist. When you add, remove, or rename PDFs, this manifest file needs to be regenerated to reflect the changes.
-
-**When to regenerate:**
-- After adding new PDFs
-- After removing PDFs
-- After renaming PDFs
-- If the site shows "file not found" errors
+**Why the difference:** Local development servers support directory listing, allowing automatic discovery. GitHub Pages serves static files only, requiring the manifest file.
 
 ### Browser Caching Issues
 
