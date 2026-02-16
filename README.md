@@ -51,7 +51,7 @@ The application will:
 
 **For local development:** The webapp will dynamically discover PDFs from the directory when you open it.
 
-**For GitHub Pages:** The webapp will fall back to the static `pdf-manifest.json` file (which can be optionally updated).
+**For GitHub Pages:** You need to regenerate the static `pdf-manifest.json` file after adding PDFs (see steps below).
 
 ### Step 1: Add Your PDF File
 
@@ -87,11 +87,17 @@ python3 -m http.server 8080
 Then open http://localhost:8080 in your browser. Your new PDFs will be automatically discovered!
 
 **GitHub Pages:**
-After committing and pushing your PDFs, they will be available immediately on your GitHub Pages site.
+After adding PDFs, regenerate the manifest and commit:
+```bash
+node generate-pdf-list.js
+git add pdfs/your-new-guide.pdf pdf-manifest.json
+git commit -m "Add new guide: Your Guide Title"
+git push
+```
 
-### Optional: Update Static Manifest (For GitHub Pages)
+### Optional: Update Static Manifest (Required for GitHub Pages)
 
-If you want to update the static manifest for GitHub Pages:
+To update the static manifest for deployment:
 
 ```bash
 # From the repository root
@@ -164,16 +170,11 @@ Works on all modern browsers:
 
 ## Troubleshooting
 
-### PDFs Show Up Automatically! 🎉
+### Automatic PDF Discovery (Local Development)
 
-**Good news:** The webapp now automatically discovers PDFs when you open it!
+**Local development:** New PDFs appear immediately when you refresh the page - no manual steps needed!
 
-- **Local development:** New PDFs appear immediately when you refresh the page
-- **GitHub Pages:** Commit your PDFs and they'll be available on your site
-
-### Optional: Manual Manifest Update
-
-For GitHub Pages hosting, you can optionally regenerate the static manifest:
+**GitHub Pages:** You must regenerate the manifest after adding PDFs:
 
 ```bash
 # From the repository root
@@ -183,7 +184,7 @@ git commit -m "Update PDF manifest"
 git push
 ```
 
-**Note:** This is optional for local development since PDFs are automatically discovered.
+**Why the difference:** Local development servers support directory listing, allowing automatic discovery. GitHub Pages serves static files only, requiring the manifest file.
 
 ### Browser Caching Issues
 

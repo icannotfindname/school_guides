@@ -20,9 +20,7 @@ This directory is located at:
 **NEW:** PDFs are now automatically discovered when you open the webapp! 🎉
 
 - **Local development:** Simply add PDFs to this directory and refresh the page
-- **GitHub Pages:** Commit your PDFs and they'll appear automatically on your site
-
-No need to run `node generate-pdf-list.js` for local development anymore!
+- **GitHub Pages:** Add PDFs, regenerate the manifest, and commit (see steps below)
 
 ## ➕ Adding New PDFs
 
@@ -36,7 +34,7 @@ To add a new PDF tutorial:
 
 2. **For local development:** Just refresh the page - PDFs are auto-discovered!
 
-3. **For GitHub Pages (optional):** Regenerate the manifest and commit:
+3. **For GitHub Pages:** Regenerate the manifest and commit:
    ```bash
    # From the repository root
    node generate-pdf-list.js
@@ -71,16 +69,11 @@ file: 'pdfs/your-filename.pdf'
 
 ## 🔧 Troubleshooting
 
-### PDFs Auto-Discovered! 🎉
+### Automatic Discovery (Local Development Only)
 
-**Good news:** The webapp now automatically discovers PDFs when you open it!
+**Local development:** New PDFs appear immediately when you refresh - no manual steps needed!
 
-- **Local development:** New PDFs appear immediately when you refresh
-- **GitHub Pages:** Commit your PDFs and they're available on your site
-
-### Optional: Manual Manifest Update (GitHub Pages)
-
-For static hosting like GitHub Pages, you can optionally regenerate the manifest:
+**GitHub Pages:** You must regenerate the manifest after adding PDFs:
 
 ```bash
 # From the repository root (school_guides/)
@@ -90,11 +83,11 @@ git commit -m "Update PDF manifest"
 git push
 ```
 
-**Note:** This is optional for local development since PDFs are automatically discovered.
+**Why:** Local servers support directory listing for automatic discovery. GitHub Pages requires a static manifest file.
 
-### When to Regenerate the Manifest (Optional)
+### When to Regenerate the Manifest
 
-For GitHub Pages deployment, consider regenerating after:
+For GitHub Pages deployment, regenerate the manifest after:
 - ✅ Adding new PDFs to this directory
 - ✅ Removing PDFs from this directory
 - ✅ Renaming PDF files

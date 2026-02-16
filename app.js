@@ -91,7 +91,9 @@ async function discoverPdfsFromDirectory() {
             const href = link.getAttribute('href');
             if (href && href.toLowerCase().endsWith('.pdf') && !href.startsWith('.')) {
                 // Decode URI component to handle spaces and special characters
-                const filename = decodeURIComponent(href);
+                // Extract just the filename (no path components)
+                const decodedHref = decodeURIComponent(href);
+                const filename = decodedHref.split('/').pop();
                 pdfFiles.push(filename);
             }
         });
