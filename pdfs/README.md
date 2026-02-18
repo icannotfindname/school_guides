@@ -24,28 +24,37 @@ This directory is located at:
 
 ## ➕ Adding New PDFs
 
-To add a new PDF tutorial:
+### 🖥️ For Local Development:
 
-1. **Place your PDF file in this directory:**
+1. **Add PDF to `pdfs/` folder**
+2. **Click the Refresh button** on the website
+3. Instant update! Shows: *"✓ Found 1 new guide(s)! Total: X"*
+
+### 🌐 For GitHub Pages / Vercel:
+
+1. **Add PDF and push to GitHub:**
    ```bash
-   # Copy your PDF here
-   cp /path/to/your-guide.pdf pdfs/your-guide.pdf
-   ```
-
-2. **For local development:** Just refresh the page - PDFs are auto-discovered!
-
-3. **For GitHub Pages:** Regenerate the manifest and commit:
-   ```bash
-   # From the repository root
-   node generate-pdf-list.js
-   git add pdfs/your-guide.pdf pdf-manifest.json
-   git commit -m "Add new guide: Your Guide Title"
+   git add pdfs/new-guide.pdf
+   git commit -m "Add new guide"
    git push
    ```
 
-### Optional: Manual Configuration
+2. **Wait for deployment** (~30-60 seconds)
+   - GitHub Actions automatically regenerates `manifest.json`
+   - Vercel/GitHub Pages deploys the changes
 
-For custom titles, descriptions, or icons, you can still manually add entries to the `manualGuides` array in `app.js`. Manual entries take precedence over auto-detected PDFs.
+3. **Click the Refresh button** on the website
+   - Shows: *"✓ Found 1 new guide(s)! Total: X"*
+
+### 🔧 Advanced: Manual manifest generation
+
+If GitHub Actions isn't set up:
+```bash
+python3 generate-manifest.py
+git add manifest.json
+git commit -m "Update manifest"
+git push
+```
 
 ## 📝 File Naming Guidelines
 
@@ -121,3 +130,7 @@ To list all PDFs:
 ```bash
 ls -lh pdfs/*.pdf
 ```
+git add pdfs/new-guide.pdf
+git commit -m "Add new guide"
+git push
+# GitHub Actions runs automatically!

@@ -130,27 +130,43 @@ function initializeRefreshButton() {
 
 // Smart refresh - tries multiple strategies
 async function smartRefresh() {
-    // Strategy 1: Try local API scan
+    // Strategy 1: Try local API scan (auto-generates manifest.json from pdfs folder)
     try {
         const response = await fetch('/api/scan', { cache: 'no-store' });
         if (response.ok) {
             const manifest = await response.json();
+            const oldCount = guides.length;
             guides = manifest.guides || [];
             trackAndLoadGuides();
             await buildSearchIndex();
-            showNotification(`Refreshed via API! Found ${guides.length} guide(s).`, 'success');
+            const newCount = guides.length;
+            
+            let message = `✓ Scanned pdfs/ folder & saved manifest.json! Found ${newCount} guide(s).`;
+            if (newCount > oldCount) {
+                message = `✓ Found ${newCount - oldCount} new guide(s)! Total: ${newCount}`;
+            } else if (newCount < oldCount) {
+                message = `✓ Removed ${oldCount - newCount} guide(s). Total: ${newCount}`;
+            }
+            showNotification(message, 'success');
             return;
         }
     } catch (e) {
-        console.log('Local API not available');
+        console.log('Local API not available, trying manifest...');
     }
     
-    // Strategy 2: Force reload manifest.json with cache bust
+    // Strategy 2: Force reload manifest.json with aggressive cache busting
     try {
+        // Use multiple cache-busting techniques
         const timestamp = Date.now();
-        const response = await fetch(`manifest.json?v=${timestamp}`, { 
+        const randomStr = Math.random().toString(36).substring(7);
+        
+        const response = await fetch(`manifest.json?v=${timestamp}&r=${randomStr}`, { 
             cache: 'no-store',
-            headers: { 'Cache-Control': 'no-cache' }
+            headers: { 
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': '0'
+            }
         });
         
         if (response.ok) {
@@ -163,11 +179,11 @@ async function smartRefresh() {
             await buildSearchIndex();
             
             if (newCount > oldCount) {
-                showNotification(`Found ${newCount - oldCount} new guide(s)! Total: ${newCount}`, 'success');
+                showNotification(`✓ Found ${newCount - oldCount} new guide(s)! Total: ${newCount}`, 'success');
             } else if (newCount < oldCount) {
-                showNotification(`Updated. Total guides: ${newCount}`, 'success');
+                showNotification(`✓ Removed ${oldCount - newCount} guide(s). Total: ${newCount}`, 'success');
             } else {
-                showNotification(`Refreshed. ${newCount} guide(s) available.`, 'info');
+                showNotification(`✓ Refreshed. ${newCount} guide(s) available.`, 'info');
             }
             return;
         }
@@ -176,7 +192,7 @@ async function smartRefresh() {
     }
     
     // Strategy 3: Hard reload page (last resort)
-    showNotification('Performing full refresh...', 'info');
+    showNotification('Performing full page refresh...', 'info');
     setTimeout(() => {
         window.location.reload(true);
     }, 1000);
