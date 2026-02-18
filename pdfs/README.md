@@ -11,7 +11,16 @@ This directory is located at:
 
 ## 📚 Current PDFs
 
-- `sample-guide.pdf` - Example tutorial demonstrating the PDF viewer
+- `How Parents _can create account and_ apply Child.pdf` - Guide for parents
+- `Publishing Decisions_ and_ Opening Enrolment Single.pdf` - Single enrolment guide
+- `Publishing Decisions_ and_ Opening Enrolment_ Batch-1.pdf` - Batch enrolment guide
+
+## ✨ Automatic PDF Detection
+
+**NEW:** PDFs are now automatically discovered when you open the webapp! 🎉
+
+- **Local development:** Simply add PDFs to this directory and refresh the page
+- **GitHub Pages:** Add PDFs, regenerate the manifest, and commit (see steps below)
 
 ## ➕ Adding New PDFs
 
@@ -23,25 +32,20 @@ To add a new PDF tutorial:
    cp /path/to/your-guide.pdf pdfs/your-guide.pdf
    ```
 
-2. **Register it in `app.js`:**
-   
-   Open `app.js` and add an entry to the `guides` array:
-   ```javascript
-   {
-       id: 'your-guide',
-       title: 'Your Guide Title',
-       description: 'Brief description',
-       file: 'pdfs/your-guide.pdf',
-       icon: '📖'
-   }
-   ```
+2. **For local development:** Just refresh the page - PDFs are auto-discovered!
 
-3. **Commit your changes:**
+3. **For GitHub Pages:** Regenerate the manifest and commit:
    ```bash
-   git add pdfs/your-guide.pdf app.js
+   # From the repository root
+   node generate-pdf-list.js
+   git add pdfs/your-guide.pdf pdf-manifest.json
    git commit -m "Add new guide: Your Guide Title"
    git push
    ```
+
+### Optional: Manual Configuration
+
+For custom titles, descriptions, or icons, you can still manually add entries to the `manualGuides` array in `app.js`. Manual entries take precedence over auto-detected PDFs.
 
 ## 📝 File Naming Guidelines
 
@@ -62,6 +66,41 @@ file: 'pdfs/your-filename.pdf'
 - Maximum recommended file size: 10MB per PDF
 - Ensure PDFs are not password-protected
 - PDFs will be indexed for search functionality when the app loads
+
+## 🔧 Troubleshooting
+
+### Automatic Discovery (Local Development Only)
+
+**Local development:** New PDFs appear immediately when you refresh - no manual steps needed!
+
+**GitHub Pages:** You must regenerate the manifest after adding PDFs:
+
+```bash
+# From the repository root (school_guides/)
+node generate-pdf-list.js
+git add pdf-manifest.json
+git commit -m "Update PDF manifest"
+git push
+```
+
+**Why:** Local servers support directory listing for automatic discovery. GitHub Pages requires a static manifest file.
+
+### When to Regenerate the Manifest
+
+For GitHub Pages deployment, regenerate the manifest after:
+- ✅ Adding new PDFs to this directory
+- ✅ Removing PDFs from this directory
+- ✅ Renaming PDF files
+- ✅ Replacing existing PDFs with new versions
+
+### Quick Check
+
+To verify your PDFs are detected:
+
+```bash
+# From repository root
+ls -lh pdfs/*.pdf
+```
 
 ## 🌐 GitHub Storage
 
