@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-18T09:37:56.871249",
+  "lastUpdated": "2026-02-18T09:43:48.096977",
   "guides": [
     {
       "id": "how-parents-can-create-account-and-apply-child",
@@ -9,6 +9,15 @@
       "icon": "📖",
       "dateAdded": "2026-02-17T14:03:43.557006",
       "dateModified": "2026-02-17T14:02:37.832001"
+    },
+    {
+      "id": "publishing-decisions-and-opening-enrolment-batch-1",
+      "title": "Publishing Decisions_ and_ Opening Enrolment_ Batch-1",
+      "description": "Guide for Publishing Decisions_ and_ Opening Enrolment_ Batch-1",
+      "file": "pdfs/Publishing Decisions_ and_ Opening Enrolment_ Batch-1.pdf",
+      "icon": "📖",
+      "dateAdded": "2026-02-18T09:42:52.153151",
+      "dateModified": "2026-02-18T09:42:52.153151"
     },
     {
       "id": "publishing-decisions-and-opening-enrolment-batch",
@@ -36,6 +45,15 @@
       "icon": "📖",
       "dateAdded": "2026-02-17T14:02:37.749372",
       "dateModified": "2026-02-17T14:02:37.748809"
+    },
+    {
+      "id": "updating-child-enrolment-year",
+      "title": "Updating Child Enrolment Year",
+      "description": "Guide for Updating Child Enrolment Year",
+      "file": "pdfs/Updating Child Enrolment Year.pdf",
+      "icon": "📖",
+      "dateAdded": "2026-02-18T09:42:52.153848",
+      "dateModified": "2026-02-18T09:42:52.153848"
     }
   ]
 }
