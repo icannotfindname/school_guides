@@ -135,17 +135,74 @@ body {
     padding: 20px;
 }
 
+.guides-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
 .guides-container h2 {
     font-size: 2em;
-    margin-bottom: 30px;
-    text-align: center;
     color: var(--text-color);
+    margin: 0;
+}
+
+.refresh-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    transition: background 0.3s, transform 0.2s;
+    box-shadow: var(--card-shadow);
+}
+
+.refresh-btn:hover {
+    background: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+.refresh-btn:active {
+    transform: translateY(0);
+}
+
+.refresh-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.refresh-btn svg {
+    transition: transform 0.6s ease;
+}
+
+.refresh-btn.spinning svg {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
 }
 
 .guides-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 25px;
+}
+
+.no-guides {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: #666;
+    font-size: 1.1em;
+    padding: 40px;
 }
 
 .guide-card {
@@ -156,11 +213,37 @@ body {
     cursor: pointer;
     transition: transform 0.3s, box-shadow 0.3s;
     text-align: center;
+    position: relative;
+    overflow: hidden;
 }
 
 .guide-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+}
+
+.new-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.75em;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(255, 82, 82, 0.4);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
 }
 
 .guide-icon {
@@ -318,6 +401,21 @@ body {
         font-size: 1em;
     }
 
+    .guides-header {
+        flex-direction: column;
+        gap: 20px;
+        align-items: stretch;
+    }
+
+    .guides-container h2 {
+        text-align: center;
+    }
+
+    .refresh-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
     .guides-grid {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
         gap: 15px;
@@ -339,7 +437,7 @@ body {
     }
 }
 
-/* Loading Spinner */
+/* Loading Spinner (removed duplicate) */
 .loading {
     display: inline-block;
     width: 20px;

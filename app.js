@@ -1,30 +1,6 @@
-// Configuration - List of available PDF guides
-const guides = [
-    {
-        id: 'sample-guide',
-        title: 'Sample Tutorial Guide',
-        description: 'An example guide to demonstrate the PDF viewer',
-        file: 'pdfs/sample-guide.pdf',
-        icon: '📚'
-    },
-    // Additional guides
-    {
-        id: 'admissions-guide-1',
-        title: 'Admissions Guide 1',
-        description: 'Admissions information and procedures',
-        file: 'pdfs/Admissions Guide 1.pdf',
-        icon: '📄'
-    }
-    // Add more guides here as needed
-    // Example:
-    // {
-    //     id: 'math-guide',
-    //     title: 'Mathematics Tutorial',
-    //     description: 'Complete guide to algebra and calculus',
-    //     file: 'pdfs/math-guide.pdf',
-    //     icon: '🔢'
-    // }
-];
+// Configuration - List of available PDF guides (loaded dynamically)
+let guides = [];
+const NEW_BADGE_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
 
 // Global variables
 let currentPdf = null;
@@ -32,24 +8,198 @@ let currentPage = 1;
 let totalPages = 0;
 let pdfScale = 1.5;
 let searchIndex = [];
+let seenGuides = {}; // Track when guides were first seen
 
 // Initialize the application
-document.addEventListener('DOMContentLoaded', function() {
-    loadGuides();
+document.addEventListener('DOMContentLoaded', async function() {
+    loadSeenGuides();
+    await loadGuidesFromManifest();
     initializeSearch();
     initializePdfViewer();
+    initializeRefreshButton();
     buildSearchIndex();
 });
+
+// Load guides from manifest.json
+async function loadGuidesFromManifest(forceRefresh = false) {
+    try {
+        let manifest;
+        let usedApi = false;
+        
+        // Try API endpoints first (for local development with server)
+        if (forceRefresh) {
+            try {
+                const response = await fetch('/api/scan', { cache: 'no-store' });
+                if (response.ok) {
+                    manifest = await response.json();
+                    guides = manifest.guides || [];
+                    usedApi = true;
+                    trackAndLoadGuides();
+                    showNotification('Guides refreshed successfully! Found ' + guides.length + ' guide(s).', 'success');
+                    return;
+                }
+            } catch (e) {
+                console.log('API not available, using static manifest.json');
+            }
+        }
+        
+        // Fall back to static manifest.json (works on GitHub Pages/Vercel)
+        const cacheParam = forceRefresh ? '?t=' + Date.now() : '';
+        const response = await fetch('manifest.json' + cacheParam);
+        if (!response.ok) {
+            throw new Error('Failed to fetch manifest.json');
+        }
+        
+        manifest = await response.json();
+        guides = manifest.guides || [];
+        trackAndLoadGuides();
+        
+        if (forceRefresh) {
+            showNotification('Refreshed from manifest.json (' + guides.length + ' guide(s)). Running local server enables auto-scan.', 'info');
+        }
+    } catch (error) {
+        console.error('Error loading manifest:', error);
+        showNotification('Could not load guides. Please check that manifest.json exists.', 'error');
+    }
+}
+
+// Helper function to track and load guides
+function trackAndLoadGuides() {
+    // Track new guides
+    guides.forEach(guide => {
+        if (!seenGuides[guide.id]) {
+            seenGuides[guide.id] = Date.now();
+        }
+        // Check if guide is new (within last week)
+        guide.isNew = isGuideNew(guide.id);
+    });
+    
+    saveSeenGuides();
+    loadGuides();
+}
+
+// Load seen guides from localStorage
+function loadSeenGuides() {
+    try {
+        const stored = localStorage.getItem('seenGuides');
+        if (stored) {
+            seenGuides = JSON.parse(stored);
+        }
+    } catch (error) {
+        console.error('Error loading seen guides:', error);
+        seenGuides = {};
+    }
+}
+
+// Save seen guides to localStorage
+function saveSeenGuides() {
+    try {
+        localStorage.setItem('seenGuides', JSON.stringify(seenGuides));
+    } catch (error) {
+        console.error('Error saving seen guides:', error);
+    }
+}
+
+// Check if a guide is new (seen within last week)
+function isGuideNew(guideId) {
+    if (!seenGuides[guideId]) return true;
+    const timeSeen = seenGuides[guideId];
+    return (Date.now() - timeSeen) < NEW_BADGE_DURATION;
+}
+
+// Initialize refresh button
+function initializeRefreshButton() {
+    const refreshBtn = document.getElementById('refreshBtn');
+    refreshBtn.addEventListener('click', async () => {
+        refreshBtn.classList.add('spinning');
+        refreshBtn.disabled = true;
+        
+        try {
+            await smartRefresh();
+        } catch (error) {
+            console.error('Refresh error:', error);
+            showNotification('Failed to refresh guides.', 'error');
+        } finally {
+            setTimeout(() => {
+                refreshBtn.classList.remove('spinning');
+                refreshBtn.disabled = false;
+            }, 500);
+        }
+    });
+}
+
+// Smart refresh - tries multiple strategies
+async function smartRefresh() {
+    // Strategy 1: Try local API scan
+    try {
+        const response = await fetch('/api/scan', { cache: 'no-store' });
+        if (response.ok) {
+            const manifest = await response.json();
+            guides = manifest.guides || [];
+            trackAndLoadGuides();
+            await buildSearchIndex();
+            showNotification(`Refreshed via API! Found ${guides.length} guide(s).`, 'success');
+            return;
+        }
+    } catch (e) {
+        console.log('Local API not available');
+    }
+    
+    // Strategy 2: Force reload manifest.json with cache bust
+    try {
+        const timestamp = Date.now();
+        const response = await fetch(`manifest.json?v=${timestamp}`, { 
+            cache: 'no-store',
+            headers: { 'Cache-Control': 'no-cache' }
+        });
+        
+        if (response.ok) {
+            const manifest = await response.json();
+            const oldCount = guides.length;
+            guides = manifest.guides || [];
+            const newCount = guides.length;
+            
+            trackAndLoadGuides();
+            await buildSearchIndex();
+            
+            if (newCount > oldCount) {
+                showNotification(`Found ${newCount - oldCount} new guide(s)! Total: ${newCount}`, 'success');
+            } else if (newCount < oldCount) {
+                showNotification(`Updated. Total guides: ${newCount}`, 'success');
+            } else {
+                showNotification(`Refreshed. ${newCount} guide(s) available.`, 'info');
+            }
+            return;
+        }
+    } catch (e) {
+        console.error('Manifest refresh failed:', e);
+    }
+    
+    // Strategy 3: Hard reload page (last resort)
+    showNotification('Performing full refresh...', 'info');
+    setTimeout(() => {
+        window.location.reload(true);
+    }, 1000);
+}
 
 // Load guide cards into the grid
 function loadGuides() {
     const guidesGrid = document.getElementById('guidesGrid');
     guidesGrid.innerHTML = '';
     
+    if (guides.length === 0) {
+        guidesGrid.innerHTML = '<p class="no-guides">No guides available. Add PDF files to the pdfs/ folder and click Refresh.</p>';
+        return;
+    }
+    
     guides.forEach(guide => {
         const card = document.createElement('div');
         card.className = 'guide-card';
+        
+        const newBadge = guide.isNew ? '<span class="new-badge">NEW</span>' : '';
+        
         card.innerHTML = `
+            ${newBadge}
             <div class="guide-icon">${guide.icon}</div>
             <h3>${guide.title}</h3>
             <p>${guide.description}</p>
@@ -82,7 +232,9 @@ async function buildSearchIndex() {
     
     for (const guide of guides) {
             try {
-            const loadingTask = pdfjsLib.getDocument({ url: encodeURI(guide.file), disableRange: true });
+            // Properly encode the file path
+            const filePath = guide.file.split('/').map(part => encodeURIComponent(part)).join('/');
+            const loadingTask = pdfjsLib.getDocument({ url: filePath, disableRange: true });
             const pdf = await loadingTask.promise;
             
             for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
@@ -228,15 +380,37 @@ async function openPdf(guide, startPage = 1) {
     modal.classList.add('active');
     
     try {
-        const loadingTask = pdfjsLib.getDocument({ url: encodeURI(guide.file), disableRange: true });
+        // Properly encode the file path, especially for spaces and special characters
+        const filePath = guide.file.split('/').map(part => encodeURIComponent(part)).join('/');
+        console.log('Loading PDF from:', filePath);
+        console.log('Original path:', guide.file);
+        
+        const loadingTask = pdfjsLib.getDocument({ 
+            url: filePath, 
+            disableRange: true,
+            isEvalSupported: false,
+            cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/cmaps/',
+            cMapPacked: true
+        });
+        
+        // Add progress tracking
+        loadingTask.onProgress = function(progress) {
+            console.log('Loading progress:', Math.round((progress.loaded / progress.total) * 100) + '%');
+        };
+        
         currentPdf = await loadingTask.promise;
         totalPages = currentPdf.numPages;
         currentPage = startPage;
         
+        console.log('PDF loaded successfully. Pages:', totalPages);
         await renderPage(currentPage);
         updatePageInfo();
     } catch (error) {
-        showNotification(`Unable to load "${guide.title}". Please try again or contact support if the issue persists.`, 'error');
+        console.error('Error loading PDF:', error);
+        console.error('File path attempted:', guide.file);
+        console.error('Error name:', error.name);
+        console.error('Error message:', error.message);
+        showNotification(`Unable to load "${guide.title}". Error: ${error.message}`, 'error');
         closePdfModal();
     }
 }

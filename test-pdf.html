@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PDF Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        #status { padding: 10px; margin: 10px 0; border: 1px solid #ccc; }
+        canvas { border: 1px solid black; margin-top: 10px; }
+        button { margin: 5px; padding: 10px; font-size: 16px; }
+    </style>
+</head>
+<body>
+    <h1>PDF.js Test</h1>
+    <div>
+        <button id="btn1" disabled>Test sample-guide.pdf</button>
+        <button id="btn2" disabled>Test Publishing Decisions</button>
+    </div>
+    <div id="status">Loading PDF.js library...</div>
+    <canvas id="pdfCanvas"></canvas>
+
+    <script>
+        // Wait for PDF.js to load
+        window.addEventListener('load', function() {
+            if (typeof pdfjsLib !== 'undefined') {
+                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+                document.getElementById('status').textContent = 'Ready to test!';
+                document.getElementById('btn1').disabled = false;
+                document.getElementById('btn2').disabled = false;
+                
+                document.getElementById('btn1').onclick = () => testPdf('pdfs/sample-guide.pdf');
+                document.getElementById('btn2').onclick = () => testPdf('pdfs/Publishing Decisions_ and_ Opening Enrolment Single.pdf');
+            } else {
+                document.getElementById('status').textContent = 'ERROR: PDF.js failed to load';
+            }
+        });
+
+        async function testPdf(filePath) {
+            const status = document.getElementById('status');
+            const canvas = document.getElementById('pdfCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            try {
+                status.innerHTML = `Testing: ${filePath}<br>Encoding...`;
+                
+                // Encode the path
+                const encodedPath = filePath.split('/').map(part => encodeURIComponent(part)).join('/');
+                status.innerHTML += `<br>Encoded path: ${encodedPath}<br>Loading...`;
+                
+                const loadingTask = pdfjsLib.getDocument({ 
+                    url: encodedPath,
+                    disableRange: true,
+                    isEvalSupported: false
+                });
+                
+                loadingTask.onProgress = (progress) => {
+                    status.innerHTML += `<br>Progress: ${Math.round((progress.loaded / progress.total) * 100)}%`;
+                };
+                
+                const pdf = await loadingTask.promise;
+                status.innerHTML += `<br>✓ PDF loaded! Pages: ${pdf.numPages}`;
+                
+                // Render first page
+                const page = await pdf.getPage(1);
+                const viewport = page.getViewport({ scale: 1.5 });
+                
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                
+                await page.render({
+                    canvasContext: ctx,
+                    viewport: viewport
+                }).promise;
+                
+                status.innerHTML += `<br>✓ Page rendered successfully!`;
+                status.style.background = '#dfd';
+                
+            } catch (error) {
+                status.innerHTML += `<br><strong>ERROR:</strong> ${error.message}<br>Name: ${error.name}<br>Stack: ${error.stack}`;
+                status.style.background = '#fdd';
+                console.error('Full error:', error);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+{
+  "lastUpdated": "2026-02-18T09:37:56.871249",
+  "guides": [
+    {
+      "id": "how-parents-can-create-account-and-apply-child",
+      "title": "How Parents can create account and apply Child",
+      "description": "Guide for How Parents can create account and apply Child",
+      "file": "pdfs/How Parents can create account and apply Child.pdf",
+      "icon": "📖",
+      "dateAdded": "2026-02-17T14:03:43.557006",
+      "dateModified": "2026-02-17T14:02:37.832001"
+    },
+    {
+      "id": "publishing-decisions-and-opening-enrolment-batch",
+      "title": "Publishing Decisions_and Opening Enrolment_Batch",
+      "description": "Guide for Publishing Decisions_and Opening Enrolment_Batch",
+      "file": "pdfs/Publishing Decisions_and Opening Enrolment_Batch.pdf",
+      "icon": "📖",
+      "dateAdded": "2026-02-17T14:04:21.028628",
+      "dateModified": "2026-02-17T14:02:37.773457"
+    },
+    {
+      "id": "publishing-decisions-and-opening-enrolment-single",
+      "title": "Publishing Decisions_and_Opening Enrolment Single",
+      "description": "Guide for Publishing Decisions_and_Opening Enrolment Single",
+      "file": "pdfs/Publishing Decisions_and_Opening Enrolment Single.pdf",
+      "icon": "📖",
+      "dateAdded": "2026-02-17T14:04:01.633818",
+      "dateModified": "2026-02-17T14:02:37.800567"
+    },
+    {
+      "id": "updating-child-enrolment-year-1",
+      "title": "Updating Child Enrolment Year-1",
+      "description": "Guide for Updating Child Enrolment Year-1",
+      "file": "pdfs/Updating Child Enrolment Year-1.pdf",
+      "icon": "📖",
+      "dateAdded": "2026-02-17T14:02:37.749372",
+      "dateModified": "2026-02-17T14:02:37.748809"
+    }
+  ]
+}
